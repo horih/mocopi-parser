@@ -49,6 +49,7 @@ pub struct FramePacket {
 pub struct Frame {
     pub num: u32,
     pub time: u32,
+    pub uttm: u64,
     pub bones: Vec<BoneTrans>,
 }
 
@@ -166,6 +167,10 @@ fn parse_frame(data: &[u8]) -> Result<(u32, Frame), Box<dyn error::Error + '_>> 
     let data = parse_value(data.rem)?;
     let time = u32::from_le_bytes(data.data.try_into()?);
 
+    //uttm
+    let data = parse_value(data.rem)?;
+    let uttm = u64::from_le_bytes(data.data.try_into()?);
+
     // btrs
     let (_, bones) = parse_bone_trans(data.rem)?;
 
@@ -174,6 +179,7 @@ fn parse_frame(data: &[u8]) -> Result<(u32, Frame), Box<dyn error::Error + '_>> 
         Frame {
             num,
             time,
+            uttm,
             bones: *bones,
         },
     ))
