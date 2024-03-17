@@ -292,7 +292,7 @@ fn parse_trans(data: &[u8]) -> Result<(u32, Transform), Box<dyn error::Error + '
 /// use std::net::UdpSocket;
 ///
 /// let socket = UdpSocket::bind("192.168.10.1:12351").unwrap();
-/// let mut buf = [0; 1024];
+/// let mut buf = [0; 2048];
 ///
 /// loop {
 ///     socket.recv_from(&mut buf).unwrap();
@@ -311,7 +311,7 @@ pub fn parse(data: &mut [u8]) -> Result<SkeletonOrFrame, Box<dyn error::Error + 
     let (len, info) = parse_info(remain)?;
     remain = &remain[((len + 8) as usize)..];
 
-    let name = parse_value(data)?.name;
+    let name = parse_value(remain)?.name;
 
     if name == "skdf" {
         let (_, skeleton) = parse_skeleton(remain)?;
